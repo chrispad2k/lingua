@@ -62,4 +62,4 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-lingua-*.json
+google-translate-key.json
