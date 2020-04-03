@@ -62,4 +62,4 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-lingua-0853f7e7714b.json
+lingua-*.json
