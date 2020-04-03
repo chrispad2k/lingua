@@ -32,6 +32,14 @@ class App extends React.Component {
       </>
     )
   }
+
+  componentDidMount() {
+    let translatePromise = translateText('Je suis allemand', 'en')
+
+    translatePromise.then((text) => {
+      this.setState({ translated: text })
+    })
+  }
 }
 
 const styles = StyleSheet.create({
