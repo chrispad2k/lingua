@@ -6,16 +6,26 @@ import {
   View,
   Text,
   StatusBar,
+  FlatList,
+  Button,
 } from 'react-native'
 
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 
 import { translateText } from './Translate'
+const languages = require('../languages.json')
 
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { translated: 'Nothing translated yet!' }
+    this.translate = this.translate.bind(this)
+
+    this.state = {
+      translations: [
+        'Nothing translated yet!',
+        "Still nothing translated, i'm sorry",
+      ],
+    }
   }
 
   render() {
@@ -26,58 +36,53 @@ class App extends React.Component {
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
             style={styles.scrollView}>
-            <Text>{this.state.translated}</Text>
+            <View style={styles.listContainer}>
+              <FlatList
+                data={this.state.translations}
+                renderItem={(item) => {
+                  // console.log(item)
+                  return (
+                    <Text style={styles.listItem} key={item.index}>
+                      {item.item}
+                    </Text>
+                  )
+                }}
+              />
+            </View>
+            <Button onPress={this.translate} title="Translate" />
           </ScrollView>
         </SafeAreaView>
       </>
     )
   }
 
-  componentDidMount() {
-    let translatePromise = translateText('Je suis allemand', 'en')
-
-    translatePromise.then((text) => {
-      this.setState({ translated: text })
+  translate() {
+    translateText('Bonjour', 'auto', 'en').then((res) => {
+      const data = res.json()
+      console.log(data)
+      const translatedText = data.translations.map(
+        (item) => item.translatedText,
+      )
+      this.setState({ translations: translatedText })
     })
   }
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
   body: {
     backgroundColor: Colors.white,
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  scrollView: {
+    backgroundColor: Colors.lighter,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+  listContainer: {
+    flex: 1,
+    paddingTop: 22,
   },
-  sectionDescription: {
-    marginTop: 8,
+  listItem: {
+    padding: 10,
     fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+    height: 44,
   },
 })
 
